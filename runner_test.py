@@ -8,7 +8,7 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 
 prices = pd.read_pickle("./equity_only.pkl")
-ibov = pd.read_pickle("./equity.pkl")[['^BVSP']].pct_change()
+ibov = pd.read_pickle("./ibov.pkl").pct_change()
 risk_free = pd.read_pickle("./cdi.pkl")
 
 cdi_returns = (1 + risk_free/100)**(1/252) - 1
