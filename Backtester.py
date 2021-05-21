@@ -65,6 +65,12 @@ def backtest(dic_data, long_and_short=True, rebal_freq='M'):
                 dic_saldo_long[i] = saldo
                 print(aum_in_the_day)
 
+                # multiplicando pelos retornos do dia
+                quota_value = (1 + returns.loc[i]) * quota_value
+                dic_quota_value_long[i] = quota_value
+                dic_qty_long[i] = qty
+                soma = quota_value.sum()
+
                 k += 1
 
 
@@ -72,6 +78,7 @@ def backtest(dic_data, long_and_short=True, rebal_freq='M'):
                 quota_value = (1 + returns.loc[i]) * quota_value
                 dic_quota_value_long[i] = quota_value
                 dic_qty_long[i] = qty
+                soma = quota_value.sum()
                 print(i)
 
         df_quota_long = pd.DataFrame(pd.concat(dic_quota_value_long, axis=0)).reset_index()
