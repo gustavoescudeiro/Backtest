@@ -79,7 +79,7 @@ def backtest(dic_data, long_and_short=True, rebal_freq='M'):
                 dic_quota_value_long[i] = quota_value
                 dic_qty_long[i] = qty
                 soma = quota_value.sum()
-                print(i)
+                print(soma)
 
         df_quota_long = pd.DataFrame(pd.concat(dic_quota_value_long, axis=0)).reset_index()
         df_quota_long.rename(columns={'level_0': 'date', 0: 'quota'}, inplace=True)
