@@ -290,3 +290,34 @@ def rolling_vol(returns, window=126):
         legend_title="")
 
     fig.show()
+
+
+def weights_heatmap(df_weights = None, year = None):
+
+    df_weights = df_weights.shift(1)
+    df_weights = df_weights[df_weights.index.year == year]
+    index_to_reorder = pd.DataFrame(df_weights.mean()).sort_values(0, ascending = False).dropna().index
+    wgt_grouped = df_weights.groupby(by=[df_weights.index.month]).mean()
+    wgt_grouped = wgt_grouped.T
+    wgt_grouped.dropna(axis = 0, how = 'all', inplace = True)
+    wgt_grouped = wgt_grouped.reindex(index_to_reorder)
+    wgt_grouped.fillna(0, inplace = True)
+    wgt_grouped = wgt_grouped * 100
+    wgt_grouped = wgt_grouped = np.round(wgt_grouped, decimals=2)
+
+
+    fig = ff.create_annotated_heatmap(wgt_grouped.values, x=wgt_grouped.columns.to_list(), y=wgt_grouped.index.to_list(), colorscale='Viridis_r')
+    #fig = ff.create_annotated_heatmap(wgt_grouped.values)
+    fig['layout']['yaxis']['autorange'] = "reversed"
+
+    fig.update_layout(
+        showlegend = False,
+        width = 1000, height = 1100,
+        autosize = False,
+        title=f"Monthly mean weights (%) - {year}")
+
+    fig['layout']['xaxis']['side'] = 'bottom'
+    fig['layout']['xaxis']['title'] = 'Month'
+    fig['layout']['yaxis']['title'] = 'Ticker'
+
+    fig.show()
