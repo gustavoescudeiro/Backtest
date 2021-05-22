@@ -6,6 +6,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from scipy.stats import skew
 from scipy.stats import kurtosis
+import plotly.figure_factory as ff
 
 
 def customLegend(fig, nameSwap):
