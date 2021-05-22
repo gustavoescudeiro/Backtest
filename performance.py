@@ -295,7 +295,6 @@ def rolling_vol(returns, window=126):
 
 def weights_heatmap(df_weights = None, year = None):
 
-    df_weights = df_weights.shift(1)
     df_weights = df_weights[df_weights.index.year == year]
     index_to_reorder = pd.DataFrame(df_weights.mean()).sort_values(0, ascending = False).dropna().index
     wgt_grouped = df_weights.groupby(by=[df_weights.index.month]).mean()
