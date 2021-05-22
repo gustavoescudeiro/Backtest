@@ -1,11 +1,6 @@
 from Allocators.core_risk_parity import *
 
 
-
-
-
-
-
 prices = pd.read_pickle(r"../Data/equity_only.pkl")
 ibov = pd.read_pickle(r"../Data/ibov.pkl").pct_change()
 prices = prices.loc[ibov.index]
