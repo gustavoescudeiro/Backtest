@@ -2,10 +2,10 @@ import pandas as pd
 import numpy as np
 import datetime
 from scipy.optimize import minimize
-TOLERANCE = 1e-10
 from sklearn.covariance import LedoitWolf
 
 
+TOLERANCE = 1e-10
 def _allocation_risk(weights, covariances):
 
     # We calculate the risk of the weights distribution
