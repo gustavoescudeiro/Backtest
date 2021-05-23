@@ -3,6 +3,7 @@ import numpy as np
 import datetime
 from scipy.optimize import minimize
 TOLERANCE = 1e-10
+from sklearn.covariance import LedoitWolf
 
 
 def _allocation_risk(weights, covariances):
@@ -92,12 +93,18 @@ def get_weight(df=None):
     # prices = df.iloc[:,:].asfreq('B').ffill() @TODO esse metodo esta adicionando mais linhas
 
     # We calculate the covariance matrix
-    # covariances = 52.0 * \
-    # prices.asfreq('W-FRI').pct_change().iloc[1:, :].cov().values
+    #covariances = 52.0 * \
+    #prices.asfreq('W-FRI').pct_change().iloc[1:, :].cov().values
 
     # We calculate the covariance matrix
-    covariances = 252.0 * \
-                  prices.pct_change().iloc[1:, :].cov().values
+    #covariances = 252.0 * \
+    #             prices.pct_change().iloc[1:, :].cov().values
+
+    # We calculate the covariance matrix
+    prices = prices.loc[:, (prices == 0).mean() < .1]
+    cov = LedoitWolf().fit(prices.pct_change().dropna().values * 252)
+    covariances = cov.covariance_
+
 
     # The desired contribution of each asset to the portfolio risk: we want all
     # asset to contribute equally
@@ -119,7 +126,7 @@ def get_weight(df=None):
 
 def get_weights_rp(signal = None, prices = None, long_and_short = False, window = 222):
     w = window
-    returns = prices.pct_change()
+
 
     if long_and_short == False:
         long_position = {}
@@ -129,9 +136,10 @@ def get_weights_rp(signal = None, prices = None, long_and_short = False, window 
             long_position[i] = lp
 
         dic_long = {}
-        for i in range(w, len(returns.index) + 1):
-            df_sub = returns.iloc[(i - w + 1):i - 1]
+        for i in range(w, len(prices.index) + 1):
+            df_sub = prices.iloc[(i - w + 1):i - 1]
             df_long = df_sub[long_position[df_sub.index[len(df_sub.index)-1]]]
+            df_long = df_long.dropna(axis=1)
             d_long = get_weight(df_long)
             print(d_long)
             dic_long[df_long.index[-1]] = d_long
@@ -151,9 +159,10 @@ def get_weights_rp(signal = None, prices = None, long_and_short = False, window 
             long_position[i] = lp
 
         dic_long = {}
-        for i in range(w, len(returns.index) + 1):
-            df_sub = returns.iloc[(i - w + 1):i - 1]
+        for i in range(w, len(prices.index) + 1):
+            df_sub = prices.iloc[(i - w + 1):i - 1]
             df_long = df_sub[long_position[df_sub.index[len(df_sub.index) - 1]]]
+            df_long = df_long.dropna(axis=1)
             d_long = get_weight(df_long)
             print(d_long)
             dic_long[df_long.index[-1]] = d_long
@@ -170,9 +179,10 @@ def get_weights_rp(signal = None, prices = None, long_and_short = False, window 
             short_position[i] = lp
 
         dic_short = {}
-        for i in range(w, len(returns.index) + 1):
-            df_sub = returns.iloc[(i - w + 1):i - 1]
+        for i in range(w, len(prices.index) + 1):
+            df_sub = prices.iloc[(i - w + 1):i - 1]
             df_short = df_sub[short_position[df_sub.index[len(df_sub.index) - 1]]]
+            df_short = df_short.dropna(axis=1)
             d_short = get_weight(df_short)
             print(d_short)
             dic_short[df_short.index[-1]] = d_short
