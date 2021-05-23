@@ -3,6 +3,7 @@ import numpy as np
 from Engine.Backtester import *
 from Performance.performance import *
 from Allocators.get_one_over_n_weights import *
+from Allocators.core_risk_parity import *
 from Signals.get_signal_momentum import *
 import seaborn as sns
 from matplotlib import pyplot as plt
@@ -16,9 +17,15 @@ cdi_returns = (1 + risk_free/100)**(1/252) - 1
 cdi_returns.columns = ['cdi_return']
 
 
-l_wgt = get_weights(get_final_df(prices, percentile = 20,
+#l_wgt = get_weights(get_final_df(prices, percentile = 20,
+#                                     window_up = 5,
+#                                     window_down = 122), long_and_short = False)
+
+sinal = get_final_df(prices, percentile = 20,
                                      window_up = 5,
-                                     window_down = 122), long_and_short = False)
+                                     window_down = 122)
+
+l_wgt = get_weights_rp(signal = sinal, prices = prices, long_and_short = False, window = 220)
 
 resultado = backtest([prices, l_wgt], long_and_short = False, rebal_freq = 'm')
 
