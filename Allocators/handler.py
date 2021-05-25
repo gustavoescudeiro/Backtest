@@ -3,7 +3,7 @@ from Allocators.core_risk_parity import *
 
 def generate_weights(**kwargs):
     if kwargs['model'] == '1/n':
-        return get_weights(kwargs['df'], kwargs['long_and_short'])
+        return get_weights(kwargs['signal'], kwargs['long_and_short'])
 
     elif kwargs['model'] == 'risk_parity':
         return get_weights_rp(kwargs['signal'], kwargs['prices'], kwargs['long_and_short'], kwargs['window'])

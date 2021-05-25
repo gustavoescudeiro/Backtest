@@ -1,9 +1,9 @@
 import pandas as pd
 
 
-def get_weights(df, long_and_short=False):
+def get_weights(signal, long_and_short=False):
     if long_and_short == False:
-        lp = df[df == 1]
+        lp = signal[signal == 1]
         lp['sum'] = lp.sum(axis=1)
         lp = lp.div(lp['sum'], axis=0)
         lp.drop(['sum'], axis=1, inplace=True)
@@ -13,8 +13,8 @@ def get_weights(df, long_and_short=False):
 
 
     else:
-        lp = df[df == 1]
-        sp = df[df == -1]
+        lp = signal[signal == 1]
+        sp = signal[signal == -1]
 
         lp['sum'] = lp.sum(axis=1)
         sp['sum'] = sp.sum(axis=1)
