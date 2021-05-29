@@ -4,6 +4,23 @@ from datetime import datetime
 
 
 def backtest(dic_data, long_and_short=True, rebal_freq='M'):
+
+    """A simple backtester that receive a dictionary contaning the asset prices of your strategy
+     and the weights of each asset. Make sure your dict correspond to the follow format: [prices, long_weights].
+     If your strategy has two legs, the third element must be the weights of short leg.
+
+    :param dic_data: A dict with dataframes, in which the first element must be the prices, the second the long weights and the third (if exists) the short weights.
+    :type uuids: dict
+    :param long_and_short: Indicate with your backtest will consider short leg (True)
+    :type uuids: Boolean
+    :param rebal_freq: The frequency of portfolio will rebalance.
+    :type uuids: string (M (monthly), W (weekly) or D (daily)
+    :return: dict
+    :rtype: A dictionary contaning 2 or 3 dataframes, depending on long_and_short parameter
+        not a list
+    """
+
+
     if long_and_short == False:
 
         prices = dic_data[0]
