@@ -6,13 +6,13 @@
 Welcome to ``Backtester``'s documentation!
 =========================================
 
+.. automodule:: Engine.Backtester
+    :members:
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
-   
-   intro
-   simpleble
-   examples
+   :caption: Contents:
+
 
 Indices and tables
 ==================

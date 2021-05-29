@@ -17,7 +17,9 @@ import sys
 import sphinx_rtd_theme
 
 
-sys.path.insert(0, os.path.abspath('../../Backtester/'))
+#sys.path.insert(0, os.path.abspath('../../Engine/'))
+#sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('../..'))
 
 
 # -- Project information -----------------------------------------------------
@@ -45,6 +47,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
+    'sphinx.ext.coverage',
+    'sphinx.ext.napoleon'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
