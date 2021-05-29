@@ -14,14 +14,17 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../simpleble/'))
+import sphinx_rtd_theme
+
+
+sys.path.insert(0, os.path.abspath('../../Backtester/'))
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'simpleble'
-copyright = '2018, Lyudmil Vladimirov'
-author = 'Lyudmil Vladimirov'
+project = 'Backtester'
+copyright = '2021, Escudeiro'
+author = 'Gustavo Lima Escudeiro'
 
 # The short X.Y version
 version = ''
