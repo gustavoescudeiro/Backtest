@@ -17,7 +17,7 @@ def backtest(dic_data, long_and_short=True, rebal_freq='M'):
     :type uuids: string (M (monthly), W (weekly) or D (daily)
     :return: dict
     :rtype: A dictionary contaning 2 or 3 dataframes, depending on long_and_short parameter
-        not a list
+    
     """
 
 
