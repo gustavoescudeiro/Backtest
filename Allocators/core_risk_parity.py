@@ -126,6 +126,17 @@ def get_weight(df=None):
 
 def get_weights_rp(signal = None, prices = None, long_and_short = False, window = 222):
     w = window
+    freq = 'M'
+    if freq == 'M'.lower():
+        factor = 22
+    elif freq == 'W'.lower():
+        factor = 5
+    elif freq == 'D'.lower():
+        factor = 1
+
+
+    ini_period = signal.groupby(pd.DatetimeIndex(signal.index).to_period('M')).nth(0)
+    ini_period.index = signal.groupby(pd.DatetimeIndex(signal.index).to_period('M')).head(1).index
 
 
     if long_and_short == False:
@@ -136,12 +147,15 @@ def get_weights_rp(signal = None, prices = None, long_and_short = False, window 
             long_position[i] = lp
 
         dic_long = {}
-        for i in range(w, len(prices.index) + 1):
-            df_sub = prices.iloc[(i - w + 1):i - 1]
+        for i in ini_period.index[::-1]:
+            first_date = prices.index[0] + pd.Timedelta(days=w * 22)
+            df_sub = prices[prices.index >= first_date]
+            init_date = i - pd.Timedelta(days=w * 22)
+            df_sub = df_sub[(df_sub.index >= init_date) & (df_sub.index <= i)]
             df_long = df_sub[long_position[df_sub.index[len(df_sub.index)-1]]]
             df_long = df_long.dropna(axis=1)
             d_long = get_weight(df_long)
-            print(d_long)
+            print(d_long, i)
             dic_long[df_long.index[-1]] = d_long
 
 
