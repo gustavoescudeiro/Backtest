@@ -124,13 +124,13 @@ def get_weight(df=None):
     return weights
 
 
-def get_weights_rp(signal = None, prices = None, long_and_short = False, window = 222, freq = 'M'):
+def get_weights_rp(signal = None, prices = None, long_and_short = False, window = 222, compute_freq = 'M'):
     w = window
 
 
 
-    ini_period = signal.groupby(pd.DatetimeIndex(signal.index).to_period(freq)).nth(0)
-    ini_period.index = signal.groupby(pd.DatetimeIndex(signal.index).to_period(freq)).head(1).index
+    ini_period = signal.groupby(pd.DatetimeIndex(signal.index).to_period(compute_freq)).nth(0)
+    ini_period.index = signal.groupby(pd.DatetimeIndex(signal.index).to_period(compute_freq)).head(1).index
 
 
     if long_and_short == False:

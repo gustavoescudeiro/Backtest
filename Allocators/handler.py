@@ -6,6 +6,6 @@ def generate_weights(**kwargs):
         return get_weights(kwargs['signal'], kwargs['long_and_short'])
 
     elif kwargs['model'] == 'risk_parity':
-        return get_weights_rp(kwargs['signal'], kwargs['prices'], kwargs['long_and_short'], kwargs['window'], kwargs['freq'])
+        return get_weights_rp(kwargs['signal'], kwargs['prices'], kwargs['long_and_short'], kwargs['window'], kwargs['compute_freq'])
 
 
