@@ -124,19 +124,13 @@ def get_weight(df=None):
     return weights
 
 
-def get_weights_rp(signal = None, prices = None, long_and_short = False, window = 222):
+def get_weights_rp(signal = None, prices = None, long_and_short = False, window = 222, freq = 'M'):
     w = window
-    freq = 'M'
-    if freq == 'M'.lower():
-        factor = 22
-    elif freq == 'W'.lower():
-        factor = 5
-    elif freq == 'D'.lower():
-        factor = 1
 
 
-    ini_period = signal.groupby(pd.DatetimeIndex(signal.index).to_period('M')).nth(0)
-    ini_period.index = signal.groupby(pd.DatetimeIndex(signal.index).to_period('M')).head(1).index
+
+    ini_period = signal.groupby(pd.DatetimeIndex(signal.index).to_period(freq)).nth(0)
+    ini_period.index = signal.groupby(pd.DatetimeIndex(signal.index).to_period(freq)).head(1).index
 
 
     if long_and_short == False:
@@ -148,21 +142,26 @@ def get_weights_rp(signal = None, prices = None, long_and_short = False, window 
 
         dic_long = {}
         for i in ini_period.index[::-1]:
-            first_date = prices.index[0] + pd.Timedelta(days=w * 22)
-            df_sub = prices[prices.index >= first_date]
-            init_date = i - pd.Timedelta(days=w * 22)
-            df_sub = df_sub[(df_sub.index >= init_date) & (df_sub.index <= i)]
-            df_long = df_sub[long_position[df_sub.index[len(df_sub.index)-1]]]
-            df_long = df_long.dropna(axis=1)
-            d_long = get_weight(df_long)
-            print(d_long, i)
-            dic_long[df_long.index[-1]] = d_long
+            #first_date = prices.index[0] + pd.Timedelta(days=w)
+            #df_sub = prices[prices.index >= first_date]
+            init_date = i - pd.Timedelta(days=w)
+            df_sub = prices[(prices.index >= init_date) & (prices.index <= i)]
+            if df_sub.shape[0] >= int(0.65*w):
+
+                df_long = df_sub[long_position[df_sub.index[len(df_sub.index)-1]]]
+                df_long = df_long.dropna(axis=1)
+                d_long = get_weight(df_long)
+                print(d_long, i)
+                dic_long[df_long.index[-1]] = d_long
 
 
-        df_long = pd.concat(dic_long, axis=0)
-        df_long = pd.DataFrame(df_long).reset_index()
-        df_long.rename(columns={'level_0': 'date'}, inplace=True)
-        df_long = df_long.pivot(index='date', columns='ticker', values='weight')
+                df_long = pd.concat(dic_long, axis=0)
+                df_long = pd.DataFrame(df_long).reset_index()
+                df_long.rename(columns={'level_0': 'date'}, inplace=True)
+                df_long = df_long.pivot(index='date', columns='ticker', values='weight')
+                df_long['date_sort'] = df_long.index
+                df_long = df_long.sort_values(['date_sort'], ascending = True)
+                df_long.drop(['date_sort'], axis=1, inplace=True)
 
         return(df_long)
     else:
@@ -173,38 +172,46 @@ def get_weights_rp(signal = None, prices = None, long_and_short = False, window 
             long_position[i] = lp
 
         dic_long = {}
-        for i in range(w, len(prices.index) + 1):
-            df_sub = prices.iloc[(i - w + 1):i - 1]
-            df_long = df_sub[long_position[df_sub.index[len(df_sub.index) - 1]]]
-            df_long = df_long.dropna(axis=1)
-            d_long = get_weight(df_long)
-            print(d_long)
-            dic_long[df_long.index[-1]] = d_long
+        for i in ini_period.index[::-1]:
+            # first_date = prices.index[0] + pd.Timedelta(days=w)
+            # df_sub = prices[prices.index >= first_date]
+            init_date = i - pd.Timedelta(days=w)
+            df_sub = prices[(prices.index >= init_date) & (prices.index <= i)]
+            if df_sub.shape[0] >= int(0.65 * w):
+                df_long = df_sub[long_position[df_sub.index[len(df_sub.index) - 1]]]
+                df_long = df_long.dropna(axis=1)
+                d_long = get_weight(df_long)
+                print(d_long, i)
+                dic_long[df_long.index[-1]] = d_long
 
-        df_long = pd.concat(dic_long, axis=0)
-        df_long = pd.DataFrame(df_long).reset_index()
-        df_long.rename(columns={'level_0': 'date'}, inplace=True)
-        df_long = df_long.pivot(index='date', columns='ticker', values='weight')
-
-        short_position = {}
-        for i in signal.index:
-            all_positions = signal.loc[i, :]
-            lp = all_positions[all_positions == -1].index.to_list()
-            short_position[i] = lp
+                df_long = pd.concat(dic_long, axis=0)
+                df_long = pd.DataFrame(df_long).reset_index()
+                df_long.rename(columns={'level_0': 'date'}, inplace=True)
+                df_long = df_long.pivot(index='date', columns='ticker', values='weight')
+                df_long['date_sort'] = df_long.index
+                df_long = df_long.sort_values(['date_sort'], ascending=True)
+                df_long.drop(['date_sort'], axis=1, inplace=True)
 
         dic_short = {}
-        for i in range(w, len(prices.index) + 1):
-            df_sub = prices.iloc[(i - w + 1):i - 1]
-            df_short = df_sub[short_position[df_sub.index[len(df_sub.index) - 1]]]
-            df_short = df_short.dropna(axis=1)
-            d_short = get_weight(df_short)
-            print(d_short)
-            dic_short[df_short.index[-1]] = d_short
+        for i in ini_period.index[::-1]:
+            # first_date = prices.index[0] + pd.Timedelta(days=w)
+            # df_sub = prices[prices.index >= first_date]
+            init_date = i - pd.Timedelta(days=w)
+            df_sub = prices[(prices.index >= init_date) & (prices.index <= i)]
+            if df_sub.shape[0] >= int(0.65 * w):
+                df_short = df_sub[short_position[df_sub.index[len(df_sub.index) - 1]]]
+                df_short = df_short.dropna(axis=1)
+                d_short = get_weight(df_short)
+                print(d_short, i)
+                dic_short[df_short.index[-1]] = d_short
 
-        df_short = pd.concat(dic_short, axis=0)
-        df_short = pd.DataFrame(df_short).reset_index()
-        df_short.rename(columns={'level_0': 'date'}, inplace=True)
-        df_short = df_short.pivot(index='date', columns='ticker', values='weight')
+                df_short = pd.concat(dic_short, axis=0)
+                df_short = pd.DataFrame(df_short).reset_index()
+                df_short.rename(columns={'level_0': 'date'}, inplace=True)
+                df_short = df_short.pivot(index='date', columns='ticker', values='weight')
+                df_short['date_sort'] = df_short.index
+                df_short = df_short.sort_values(['date_sort'], ascending=True)
+                df_short.drop(['date_sort'], axis=1, inplace=True)
 
         return(df_long, df_short)
 

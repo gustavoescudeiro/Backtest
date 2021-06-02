@@ -30,7 +30,7 @@ def backtest(dic_data, long_and_short=True, rebal_freq='M'):
 
         # fazemos isso para que o peso do dia anterior vá para o próximo dia.
         # Importante, pois quando pegarmos o primeiro dia de cada mês para rebalancear, os pesos serão do último dia do mês anterior
-        l_wgt = l_wgt.shift(1)
+        #l_wgt = l_wgt.shift(1)
 
         # fazemos isso para garantir que as primeiras linhas nao contenham somente NAN's
         # caso isso ocorresse, o backtest nao avancaria
