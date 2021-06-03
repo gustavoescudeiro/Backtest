@@ -52,4 +52,6 @@ for i in range(len(resultados)):
 summary_df = pd.concat([pd.DataFrame(combinacoes, columns = ['percentil', 'window_up', 'window_down', 'allocator_model', 'rebal_frequency']),
             pd.DataFrame(list_sharpes, columns = ['annual_sharpe_ratio'])], axis = 1)
 
+summary_df.to_csv('result.csv', sep = ';', decimal = ',')
+
 print('finished')
