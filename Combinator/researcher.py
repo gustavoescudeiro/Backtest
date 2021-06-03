@@ -21,7 +21,7 @@ cdi_returns.columns = ['cdi_return']
 lista_percentil = [10, 20, 30, 40, 50, 60, 70, 80, 90]
 lista_window = [[22, 22*2], [22, 22*3], [22, 22*4], [22, 22*5], [22, 22*6]]
 list_model = ['risk_parity', '1/n']
-list_rebal_freq = ['d', 'w', 'm']
+list_rebal_freq = ['m']
 
 combinacoes = []
 for j in list_model:
