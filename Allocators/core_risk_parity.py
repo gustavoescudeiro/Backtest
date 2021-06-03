@@ -124,7 +124,7 @@ def get_weight(df=None):
     return weights
 
 
-def get_weights_rp(signal = None, prices = None, long_and_short = False, window = 222, compute_freq = 'M'):
+def get_weights_rp(signal = None, prices = None, long_and_short = False, window = 365, compute_freq = 'm'):
     w = window
 
 
